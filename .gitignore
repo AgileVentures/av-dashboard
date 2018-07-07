@@ -2,3 +2,5 @@ av_dashboard/__pycache__/*
 av_dashboard.egg-info/*
 av_dashboard_env/*
 .pytest_cache/*
+tests/__pycache__/*
+__pycache__/*

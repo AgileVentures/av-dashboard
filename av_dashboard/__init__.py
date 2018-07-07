@@ -6,7 +6,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from flask import request, Flask, render_template, make_response
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
     from io import StringIO
 
     def generate_svg():
@@ -21,7 +21,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def hello():
-        return render_template('hello.html', graph = generate_svg())
+        return render_template('index.html', graph = generate_svg())
 
     return app
 
