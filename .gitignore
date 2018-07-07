@@ -1,1 +1,9 @@
 av_dashboard/__pycache__/*
+__pycache__/*
+.pytest_cache/*
+av_dashboard.egg-info/*
+.Include/*
+Lib/*
+Scripts/*
+pip-selfcheck.json
+pyvenv.cfg

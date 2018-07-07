@@ -1,0 +1,7 @@
+<!doctype html>
+<title>Agile Ventures Dashboard</title>
+{% if graph %}
+  {{graph | safe}}
+{% else %}
+  <h1>We don't seem to have any visualizations at the moment!</h1>
+{% endif %}
