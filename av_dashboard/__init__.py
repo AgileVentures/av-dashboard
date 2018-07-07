@@ -6,3 +6,6 @@ def create_app(test_config=None):
     def hello():
         return "Hello!"
     return app
+
+if __name__ == "__main__":
+    create_app().run()
