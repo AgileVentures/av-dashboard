@@ -1,1 +1,1 @@
-web: gunicorn wsgi.py
+web: gunicorn av_dashboard:app
