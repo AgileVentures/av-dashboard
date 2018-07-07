@@ -1,7 +1,6 @@
 atomicwrites==1.1.5
 attrs==18.1.0
-## !! Could not determine repository location
-av-dashboard==0.1
+.
 click==6.7
 colorama==0.3.9
 coverage==4.5.1
@@ -20,3 +19,4 @@ python-dateutil==2.7.3
 pytz==2018.5
 six==1.11.0
 Werkzeug==0.14.1
+gunicorn
