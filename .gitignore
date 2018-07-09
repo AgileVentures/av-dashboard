@@ -4,3 +4,4 @@ av_dashboard_env/*
 .pytest_cache/*
 tests/__pycache__/*
 __pycache__/*
+features/__pycache__/*
