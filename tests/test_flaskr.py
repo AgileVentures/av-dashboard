@@ -12,5 +12,4 @@ def client():
 
 def test_simple(client):
     rv = client.get('/')
-    print(rv.data)
     assert b'Agile Ventures Dashboard' in rv.data

@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from flask import request, Flask, render_template, make_response
+from flask import request, Flask, render_template, make_response,redirect
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -19,10 +19,12 @@ def create_app(test_config=None):
         figdata_svg = '<svg' + figfile.getvalue().split('<svg')[1]
         return figdata_svg
 
-    @app.route("/")
+    @app.route("/", methods=['GET', 'POST'])
     def hello():
-        return render_template('index.html', graph = generate_svg())
-
+        if 'token' in request.form:
+            return render_template('index.html', graph = generate_svg())
+        else:
+            return redirect("https://www.agileventures.org/get-token")
     return app
 
 app = create_app()
