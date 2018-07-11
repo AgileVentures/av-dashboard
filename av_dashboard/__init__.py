@@ -1,13 +1,21 @@
 import pandas as pd
+import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from flask import request, Flask, render_template, make_response,redirect
+from flask import request, Flask, render_template, make_response,redirect, session
+import jwt
 
 def create_app(test_config=None):
     app = Flask(__name__)
     from io import StringIO
+    if test_config is not None and 'session_key' in test_config:
+        app.secret_key = test_config['session_key']
+    else:
+        app.secret_key = os.environ.get('session_key')
+    if test_config is not None and 'jwt_key' in test_config:
+        app.jwt_key = test_config['jwt_key']
 
     def generate_svg():
         d = {'temperature': [70, 80, 95], 'ice_cream_sales': [10, 25, 40]}
@@ -21,13 +29,23 @@ def create_app(test_config=None):
 
     @app.route("/", methods=['GET', 'POST'])
     def hello():
+        token = None
         if 'token' in request.form:
-            return render_template('index.html', graph = generate_svg())
+            token = request.form['token']
+        elif 'token' in session:
+            token = session['token']
         else:
             return redirect("https://www.agileventures.org/get-token")
+        try:
+            jwt.decode(token, app.jwt_key, algorithms=['HS256'])
+        except jwt.exceptions.ExpiredSignatureError:
+            session['token'] = None
+            return redirect("https://www.agileventures.org/get-token")
+        session['token'] = token
+        return render_template('index.html', graph = generate_svg())
+
     return app
 
-app = create_app()
-
 if __name__ == "__main__":
+    app = create_app()
     app.run()
