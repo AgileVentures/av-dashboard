@@ -30,6 +30,7 @@ def create_app(test_config=None):
     @app.route("/", methods=['GET', 'POST'])
     def hello():
         token = None
+        decoded_token = None
         if 'token' in request.form:
             token = request.form['token']
         elif 'token' in session:
@@ -37,12 +38,15 @@ def create_app(test_config=None):
         else:
             return redirect("https://www.agileventures.org/get-token")
         try:
-            jwt.decode(token, app.jwt_key, algorithms=['HS256'])
+            decoded_token = jwt.decode(token, app.jwt_key, algorithms=['HS256'])
         except jwt.exceptions.ExpiredSignatureError:
             session['token'] = None
             return redirect("https://www.agileventures.org/get-token")
         session['token'] = token
-        return render_template('index.html', graph = generate_svg())
+        if decoded_token.get('authorized') == 'true':
+            return render_template('index.html', graph = generate_svg())
+        else:
+            return "You are not authorized to view this resource"
 
     return app
 

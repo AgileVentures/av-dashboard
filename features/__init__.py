@@ -27,10 +27,17 @@ def then_i_should_be_redirected_to_WSO(self):
     assert world.response.status_code == 302
     assert world.response.location == "https://www.agileventures.org/get-token"
 
-@step(r'When I return with a valid token(?: expiring on (.*))?')
+@step(r'When I return with a valid token with authorization privileges(?: expiring on (.*))?')
 def when_i_return_with_a_valid_token(self, expiration):
     data = dict(
-        token = jwt.encode({'exp': datetime.datetime.strptime(expiration, "%Y-%m-%d").timestamp() }, 'super_sauce', algorithm='HS256')
+        token = jwt.encode({'exp': datetime.datetime.strptime(expiration, "%Y-%m-%d").timestamp(), 'authorized': 'true' }, 'super_sauce', algorithm='HS256')
+    )
+    world.response = world.app.post('/', data=data)
+
+@step(r'When I return with a valid token without authorization privileges(?: expiring on (.*))?')
+def when_i_return_with_a_valid_token_without_authorization(self, expiration):
+    data = dict(
+        token = jwt.encode({'exp': datetime.datetime.strptime(expiration, "%Y-%m-%d").timestamp(), 'authorized': 'false' }, 'super_sauce', algorithm='HS256')
     )
     world.response = world.app.post('/', data=data)
 
@@ -41,3 +48,7 @@ def set_date_to_2012_10_01(self):
 @step(r'When the date is 2012-10-03')
 def set_date_to_2012_10_01(self):
     freeze_time("2012-10-03 12:00:01").start()
+
+@step(r"Then I should see a message saying I do not have access")
+def see_no_access_message(self):
+    assert b'You are not authorized to view this resource' in world.response.data
