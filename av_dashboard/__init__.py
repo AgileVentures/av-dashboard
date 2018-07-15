@@ -27,26 +27,38 @@ def create_app(test_config=None):
         figdata_svg = '<svg' + figfile.getvalue().split('<svg')[1]
         return figdata_svg
 
-    @app.route("/", methods=['GET', 'POST'])
-    def hello():
-        token = None
-        decoded_token = None
+    def extract_raw_token():
         if 'token' in request.form:
-            token = request.form['token']
+            return request.form['token']
         elif 'token' in session:
-            token = session['token']
-        else:
-            return redirect("https://www.agileventures.org/get-token")
+            return session['token']
+
+    def decode_token(token):
+        decoded_token = None
         try:
             decoded_token = jwt.decode(token, app.jwt_key, algorithms=['HS256'])
         except jwt.exceptions.ExpiredSignatureError:
-            session['token'] = None
-            return redirect("https://www.agileventures.org/get-token")
-        session['token'] = token
+            return
+        return decoded_token
+
+    def formulate_response(decoded_token):
         if decoded_token.get('authorized') == 'true':
             return render_template('index.html', graph = generate_svg())
         else:
             return "You are not authorized to view this resource"
+
+    @app.route("/", methods=['GET', 'POST'])
+    def hello():
+        decoded_token = None
+        token = extract_raw_token()
+        if token is None:
+            return redirect("https://www.agileventures.org/get-token")
+        decoded_token = decode_token(token)
+        if decoded_token is None:
+            session['token'] = None
+            return redirect("https://www.agileventures.org/get-token")
+        session['token'] = token
+        return formulate_response(decoded_token)
 
     return app
 
