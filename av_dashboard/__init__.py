@@ -46,7 +46,7 @@ def create_app(test_config=None):
 
     def formulate_response(decoded_token):
         if decoded_token.get('authorized') == 'true':
-            return render_template('index.html', graph = generate_svg())
+            return render_index()
         else:
             return "You are not authorized to view this resource"
 
