@@ -41,14 +41,22 @@ def create_app(test_config=None):
             return
         return decoded_token
 
+    def render_index():
+        return render_template('index.html', graph = generate_svg())
+
     def formulate_response(decoded_token):
         if decoded_token.get('authorized') == 'true':
             return render_template('index.html', graph = generate_svg())
         else:
             return "You are not authorized to view this resource"
 
+    def force_authentication():
+        return app.config['ENV'] != "development"
+
     @app.route("/", methods=['GET', 'POST'])
     def hello():
+        if not force_authentication():
+            return render_index()
         decoded_token = None
         token = extract_raw_token()
         if token is None:
