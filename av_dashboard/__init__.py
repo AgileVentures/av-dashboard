@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from flask import request, Flask, render_template, make_response,redirect, session
 import jwt
+from functools import wraps
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -44,30 +45,33 @@ def create_app(test_config=None):
     def render_index():
         return render_template('index.html', graph = generate_svg())
 
-    def formulate_response(decoded_token):
-        if decoded_token.get('authorized') == 'true':
-            return render_index()
-        else:
-            return "You are not authorized to view this resource"
-
     def force_authentication():
         return app.config['ENV'] != "development"
 
-    @app.route("/", methods=['GET', 'POST'])
-    def hello():
-        if not force_authentication():
-            return render_index()
-        decoded_token = None
-        token = extract_raw_token()
-        if token is None:
-            return redirect("https://www.agileventures.org/get-token")
-        decoded_token = decode_token(token)
-        if decoded_token is None:
-            session['token'] = None
-            return redirect("https://www.agileventures.org/get-token")
-        session['token'] = token
-        return formulate_response(decoded_token)
+    def login_required(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not force_authentication():
+                return f(*args, **kwargs)
+            decoded_token = None
+            token = extract_raw_token()
+            if token is None:
+                return redirect("https://www.agileventures.org/get-token")
+            decoded_token = decode_token(token)
+            if decoded_token is None:
+                session['token'] = None
+                return redirect("https://www.agileventures.org/get-token")
+            session['token'] = token
+            if decoded_token.get('authorized') == 'true':
+                return f(*args, **kwargs)
+            else:
+                return "You are not authorized to view this resource"
+        return decorated_function
 
+    @app.route("/", methods=['GET', 'POST'])
+    @login_required
+    def hello():
+        return render_index()
     return app
 
 if __name__ == "__main__":
