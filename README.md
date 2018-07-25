@@ -14,7 +14,7 @@ $ pip3 install -e .
 $ aloe
 ```
 
-##development environment
+## development environment
 
 To easily see the dashboard in development mode, you have to set flask to be in development mode by doing
 
