@@ -1,1 +1,1 @@
-web: gunicorn av_dashboard:app
+web: gunicorn av_dashboard.unicorn:app
