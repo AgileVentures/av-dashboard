@@ -5,6 +5,7 @@ python:
   - "pypy3.5"
   # command to install dependencies
 install:
+  - if [[ $TRAVIS_PYTHON_VERSION == 'pypy3.5'  ]]; then pip install cpython; fi
   - pip3 install -r requirements.txt
   - pip3 install .
   # command to run tests
