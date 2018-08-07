@@ -1,4 +1,4 @@
-# av-dashboard    [![Build Status](https://travis-ci.org/Krafty-Coder/av-dashboard.svg?branch=master)](https://travis-ci.org/AgileVentures/av-dashboard)
+# av-dashboard    [![Build Status](https://travis-ci.org/AgileVentures/av-dashboard.svg?branch=master)](https://travis-ci.org/AgileVentures/av-dashboard)
 An internal dashboard for Agile Ventures analytics
 
 ## installation
