@@ -11,7 +11,7 @@ from av_dashboard import create_app
 
 @before.each_example
 def before_all(*args):
-    app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce'})
+    app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce', 'postgres': {'user': 'postgres', 'pw': 'password', 'host': 'localhost', 'port': '5432', 'db': 'db'}})
     app.config['TESTING'] = True
     world.app = app.test_client()
 
