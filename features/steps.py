@@ -17,15 +17,8 @@ from datetime import date
 
 meta = MetaData()
 
-
-def db_url():
-    POSTGRES = {'user': 'postgres', 'pw': 'pw', 'host': 'localhost', 'port': '5432', 'db': 'av_dashboard_test'}
-    db_url = 'postgresql://%(user)s:\
-%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
-    return db_url
-
-def clear_db():
-    engine = create_engine(db_url()  , convert_unicode=True)
+def clear_db(app):
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI']  , convert_unicode=True)
     meta = our_base.Base.metadata
     with contextlib.closing(engine.connect()) as con:
         trans = con.begin()
@@ -34,8 +27,8 @@ def clear_db():
             con.execute(table.delete())
         trans.commit()
 
-def basic_fixture():
-    some_engine = create_engine(db_url())
+def basic_fixture(app):
+    some_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
     Session = sessionmaker(bind=some_engine)
     session = Session()
     try:
@@ -48,12 +41,11 @@ def basic_fixture():
     finally:
         session.close()
 
-
 @before.each_example
 def before_all(*args):
-    clear_db()
-    basic_fixture()
-    app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce', 'postgres': {'user': 'postgres', 'pw': 'pw', 'host': 'localhost', 'port': '5432', 'db': 'av_dashboard_test'}})
+    app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce'})
+    clear_db(app)
+    basic_fixture(app)
     app.config['TESTING'] = True
     world.app = app.test_client()
 

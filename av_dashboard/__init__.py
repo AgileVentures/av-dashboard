@@ -11,19 +11,24 @@ from flask_sqlalchemy import SQLAlchemy
 from av_dashboard.database import db_connection
 from io import StringIO
 from sqlalchemy import create_engine
+from pathlib import Path
 
+def select_configuration_file():
+    import os
+    import pathlib
+    if os.environ['FLASK_ENV'] == 'test':
+        return str(pathlib.Path(".").absolute().joinpath(Path("config/testing.py")))
 
 def configure_db_engine(app, test_config):
-    if test_config and 'postgres' in test_config:
-        POSTGRES = test_config['postgres']
-    else:
-        POSTGRES = {'user': 'postgres', 'pw': 'pw', 'host': 'localhost', 'port': '5432', 'db': 'av_dashboard'}
+    POSTGRES = {'user': app.config['POSTGRES_USER'], 'pw': app.config['POSTGRES_PASSWORD'], 'host': app.config['POSTGRES_HOST'], 'port': app.config['POSTGRES_PORT'], 'db': app.config['POSTGRES_DATABASE']}
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\
 %(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
     app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
 
 def create_app(test_config=None):
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_pyfile('config.py')
+    app.config.from_pyfile(select_configuration_file())
     configure_db_engine(app, test_config)
     if test_config is not None and 'session_key' in test_config:
         app.secret_key = test_config['session_key']
