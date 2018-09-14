@@ -8,10 +8,52 @@ from nose.tools import assert_equals
 
 from av_dashboard import create_app
 
+import contextlib
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from av_dashboard import our_base, user, plan, subscription
+from sqlalchemy import MetaData
+from datetime import date
+
+meta = MetaData()
+
+
+def db_url():
+    POSTGRES = {'user': 'postgres', 'pw': 'pw', 'host': 'localhost', 'port': '5432', 'db': 'av_dashboard_test'}
+    db_url = 'postgresql://%(user)s:\
+%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    return db_url
+
+def clear_db():
+    engine = create_engine(db_url()  , convert_unicode=True)
+    meta = our_base.Base.metadata
+    with contextlib.closing(engine.connect()) as con:
+        trans = con.begin()
+        for table in reversed(meta.sorted_tables):
+            print("deleting")
+            con.execute(table.delete())
+        trans.commit()
+
+def basic_fixture():
+    some_engine = create_engine(db_url())
+    Session = sessionmaker(bind=some_engine)
+    session = Session()
+    try:
+        usr = user.User()
+        pln = plan.Plan(amount=1000)
+        sub = subscription.Subscription(user=usr,sponsor=usr,plan=pln)
+        session.add(sub)
+        session.commit()
+        some_engine.dispose()
+    finally:
+        session.close()
+
 
 @before.each_example
 def before_all(*args):
-    app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce', 'postgres': {'user': 'postgres', 'pw': 'password', 'host': 'localhost', 'port': '5432', 'db': 'db'}})
+    clear_db()
+    basic_fixture()
+    app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce', 'postgres': {'user': 'postgres', 'pw': 'pw', 'host': 'localhost', 'port': '5432', 'db': 'av_dashboard_test'}})
     app.config['TESTING'] = True
     world.app = app.test_client()
 

@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from flask import request, Flask, render_template, make_response,redirect, session
+from flask import request, Flask, render_template, make_response,redirect,session
 import jwt
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
@@ -17,7 +17,7 @@ def configure_db_engine(app, test_config):
     if test_config and 'postgres' in test_config:
         POSTGRES = test_config['postgres']
     else:
-        POSTGRES = {'user': 'postgres', 'pw': 'password', 'host': 'localhost', 'port': '5432', 'db': 'db'}
+        POSTGRES = {'user': 'postgres', 'pw': 'pw', 'host': 'localhost', 'port': '5432', 'db': 'av_dashboard'}
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\
 %(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
     app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
@@ -34,26 +34,22 @@ def create_app(test_config=None):
 
     def generate_svg():
         app.db_connection = db_connection(app)
-        query = """
-        WITH subscription_records AS
-        (SELECT users.created_at as join_date, subscriptions.user_id as user_id, subscriptions.started_at as started_at, subscriptions.ended_at as ended_at, plans.amount as amount, subscriptions.sponsor_id as sponsor_id
+        query= """
+        SELECT quarter_signed_up, year_signed_up, AVG(days_to_first_subscribe) as average_days_to_subscribe, quarter_signed_up - 1 + 4*(year_signed_up-2013) as quarters_counted_from_january_2013_to_user_signing_up
+        FROM (SELECT result.user_signs_up, result.first_value as user_first_subscribes, EXTRACT(QUARTER FROM result.user_signs_up) as quarter_signed_up, EXTRACT(YEAR FROM result.user_signs_up) as year_signed_up,
+        CASE WHEN result.user_signs_up::date > '2016-5-31'::date THEN result.first_value::date - result.user_signs_up::date
+        ELSE result.first_value::date - '2016-5-31'::date
+        END as days_to_first_subscribe
+        FROM (SELECT users.id as user_id, users.created_at as user_signs_up, first_value(subscriptions.started_at) OVER (PARTITION BY user_id)
         FROM subscriptions
-        INNER JOIN plans on subscriptions.plan_id = plans.id
-        INNER JOIN users on subscriptions.user_id = users.id)
-
-        SELECT COUNT(quarter_signed_up) as number_of_upgrades, quarter_signed_up - 1 + 4*(year_signed_up-2013) as quarters_counted_from_january_2013_to_user_signing_up
-        FROM (SELECT EXTRACT(QUARTER FROM result.join_date) as quarter_signed_up, EXTRACT(YEAR FROM result.join_date) as year_signed_up
-        FROM (SELECT t1.started_at::date as upgrade_date, t1.user_id as user_id, t1.join_date::date as join_date
-        FROM subscription_records t1, subscription_records t2
-        WHERE t1.user_id = t2.user_id
-        AND t1.amount > t2.amount
-        AND t1.started_at::date = t2.ended_at::date
-        AND (t1.sponsor_id = t1.user_id OR t1.sponsor_id IS null)) as result) resultant
+        INNER JOIN users on subscriptions.user_id = users.id
+        WHERE subscriptions.sponsor_id = users.id OR subscriptions.sponsor_id IS null
+        ORDER BY subscriptions.started_at ASC) as result) as resultant
         GROUP BY quarter_signed_up, year_signed_up
-        ORDER BY quarter_signed_up, year_signed_up ASC
+        ORDER BY year_signed_up, quarter_signed_up ASC
         """
         d = pd.read_sql(query, app.db_connection)
-        d.plot.scatter(x='quarters_counted_from_january_2013_to_user_signing_up', y = 'number_of_upgrades', xticks = range(20)).plot()
+        d.plot.scatter(x='quarters_counted_from_january_2013_to_user_signing_up', y = 'average_days_to_subscribe', xticks = range(20))
         figfile = StringIO()
         plt.savefig(figfile, format='svg')
         figfile.seek(0)
