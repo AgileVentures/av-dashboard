@@ -5,3 +5,5 @@ av_dashboard_env/*
 tests/__pycache__/*
 __pycache__/*
 features/__pycache__/*
+alembic/__pycache__/*
+alembic/versions/__pycache__/*
