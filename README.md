@@ -8,31 +8,34 @@ $ pip3 install -r requirements.txt
 $ pip3 install -e .
 ```
 
+## database setup
+
+//put configuration file editing description here
+
+After you have setup the database configurations above, create the databases like so with your postgresql server already running:-
+
+```
+$ ./create_database.sh
+```
+
+Next, migrate the test and dev databases like so:
+
+```
+$ ./migrate_databases.sh
+```
+
 ## testing
+Run
 
 ```
-$ aloe
+$ ./run_tests.sh
 ```
-
 ## development environment
 
-To easily see the dashboard in development mode, you have to set flask to be in development mode by doing
+To see the dashboard in development mode, you will need to have done the database setup and then run
 
 ```
-$ export FLASK_ENV=development
+$ ./run_server.sh
 ```
 
-on the command line before running flask run.  Or in windows run this before:
-
-```
-$ set FLASK_ENV=development
-```
-
-Note however that if you run this command and then run aloe tests they will fail as your app will still be
-in development mode and bypassing the authentication procedures which are under test.  To go back to a production mode, run:
-
-```
-$ export FLASK_ENV=production
-```
-
-or the windows equivalent and then the tests should pass again.
+And navigate to the url displayed on the output.
