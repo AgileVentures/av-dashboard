@@ -11,9 +11,8 @@ before_install:
 install:
   - pip3 install -r requirements.txt
   - pip3 install .
-  - cp alembic.ini.travis alembic.ini
   - cp instance/config.py.example instance/config.py
-  - alembic upgrade head
+  - alembic upgrade head --tag ci_db
 
 # command to run tests
 script: ./run_ci.sh
