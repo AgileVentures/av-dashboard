@@ -12,6 +12,7 @@ install:
   - pip3 install -r requirements.txt
   - pip3 install .
   - cp alembic.ini.travis alembic.ini
+  - cp instance/config.py.example instance/config.py
   - alembic upgrade head
 
 # command to run tests
