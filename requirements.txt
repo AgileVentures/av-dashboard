@@ -1,9 +1,10 @@
+.
 alembic==1.0.0
 aloe==0.1.16
 ansicolors==1.1.8
 atomicwrites==1.1.5
 attrs==18.1.0
-.
+av-dashboard==0.1
 click==6.7
 colorama==0.3.9
 coverage==4.5.1
@@ -44,6 +45,7 @@ pytz==2018.5
 repoze.lru==0.7
 six==1.11.0
 SQLAlchemy==1.2.11
+SQLAlchemy-Utils==0.33.5
 sure==1.4.11
 testtools==2.3.0
 traceback2==1.4.0
