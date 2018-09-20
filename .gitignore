@@ -10,3 +10,5 @@ alembic/versions/__pycache__/*
 config/testing.py
 instance/config.py
 config/__pycache__/*
+config/dev.py
+alembic.ini
