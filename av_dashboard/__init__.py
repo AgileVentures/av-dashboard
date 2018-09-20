@@ -22,6 +22,8 @@ def select_configuration_file():
         return str(pathlib.Path(".").absolute().joinpath(Path("config/ci.py")))
     if os.environ['FLASK_ENV'] == 'dev':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/dev.py")))
+    if os.environ['FLASK_ENV'] == 'production':
+        return str(pathlib.Path(".").absolute().joinpath(Path("config/production.py")))
 
 def configure_db_engine(app, test_config):
     POSTGRES = {'user': app.config['POSTGRES_USER'], 'pw': app.config['POSTGRES_PASSWORD'], 'host': app.config['POSTGRES_HOST'], 'port': app.config['POSTGRES_PORT'], 'db': app.config['POSTGRES_DATABASE']}
@@ -35,7 +37,8 @@ def configure_db_engine(app, test_config):
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_pyfile('config.py')
+    if os.environ['FLASK_ENV'] != 'production':
+        app.config.from_pyfile('config.py')
     app.config.from_pyfile(select_configuration_file())
     configure_db_engine(app, test_config)
     if test_config is not None and 'session_key' in test_config:
