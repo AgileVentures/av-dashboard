@@ -32,7 +32,13 @@ $ ./run_tests.sh
 ```
 ## development environment
 
-To see the dashboard in development mode, you will need to have done the database setup and then run
+To see the dashboard in development mode, you will need to have done the database setup and then run the command to seed the database:
+
+```
+$ ./seed_database.sh
+```
+
+And then run the tests:
 
 ```
 $ ./run_server.sh
