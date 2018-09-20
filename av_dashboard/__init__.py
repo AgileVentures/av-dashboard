@@ -19,12 +19,16 @@ def select_configuration_file():
     if os.environ['FLASK_ENV'] == 'test':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/testing.py")))
     if os.environ['FLASK_ENV'] == 'ci':
-        return str(pathlib.Path(".").absolute().joinpath(Path("config/ci.py")))  
+        return str(pathlib.Path(".").absolute().joinpath(Path("config/ci.py")))
 
 def configure_db_engine(app, test_config):
     POSTGRES = {'user': app.config['POSTGRES_USER'], 'pw': app.config['POSTGRES_PASSWORD'], 'host': app.config['POSTGRES_HOST'], 'port': app.config['POSTGRES_PORT'], 'db': app.config['POSTGRES_DATABASE']}
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\
-%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    if POSTGRES['pw']:
+        POSTGRES['pw'] = ':%(pw)s' % POSTGRES
+    if POSTGRES['port']:
+        POSTGRES['port'] = ':%(port)s' % POSTGRES
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s\
+%(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
     app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
 
 def create_app(test_config=None):
