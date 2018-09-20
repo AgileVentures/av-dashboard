@@ -1,9 +1,18 @@
 language: python
 python:
   - "3.6"
-  # command to install dependencies
+services:
+  - postgresql
+
+before_script:
+  psql -c 'create database av_dashboard_test;'  -U postgres
+
+# command to install dependencies
 install:
   - pip3 install -r requirements.txt
   - pip3 install .
-  # command to run tests
-script: aloe
+  - cp alembic.ini.travis alembic.ini
+  - alembic upgrade head
+
+# command to run tests
+script: ./run_ci.sh
