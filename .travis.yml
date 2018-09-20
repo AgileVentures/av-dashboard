@@ -4,7 +4,7 @@ python:
 services:
   - postgresql
 
-before_script:
+before_install:
   psql -c 'create database av_dashboard_test;'  -U postgres
 
 # command to install dependencies
