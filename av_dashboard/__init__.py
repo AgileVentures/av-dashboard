@@ -18,6 +18,8 @@ def select_configuration_file():
     import pathlib
     if os.environ['FLASK_ENV'] == 'test':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/testing.py")))
+    if os.environ['FLASK_ENV'] == 'ci':
+        return str(pathlib.Path(".").absolute().joinpath(Path("config/ci.py")))  
 
 def configure_db_engine(app, test_config):
     POSTGRES = {'user': app.config['POSTGRES_USER'], 'pw': app.config['POSTGRES_PASSWORD'], 'host': app.config['POSTGRES_HOST'], 'port': app.config['POSTGRES_PORT'], 'db': app.config['POSTGRES_DATABASE']}
