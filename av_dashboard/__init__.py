@@ -26,14 +26,17 @@ def select_configuration_file():
         return str(pathlib.Path(".").absolute().joinpath(Path("config/production.py")))
 
 def configure_db_engine(app, test_config):
-    POSTGRES = {'user': app.config['POSTGRES_USER'], 'pw': app.config['POSTGRES_PASSWORD'], 'host': app.config['POSTGRES_HOST'], 'port': app.config['POSTGRES_PORT'], 'db': app.config['POSTGRES_DATABASE']}
-    if POSTGRES['pw']:
-        POSTGRES['pw'] = ':%(pw)s' % POSTGRES
-    if POSTGRES['port']:
-        POSTGRES['port'] = ':%(port)s' % POSTGRES
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s\
-%(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
-    app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
+    if 'DATABASE_URL' in app.config:
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['DATABASE_URL']
+    else:
+        POSTGRES = {'user': app.config['POSTGRES_USER'], 'pw': app.config['POSTGRES_PASSWORD'], 'host': app.config['POSTGRES_HOST'], 'port': app.config['POSTGRES_PORT'], 'db': app.config['POSTGRES_DATABASE']}
+        if POSTGRES['pw']:
+            POSTGRES['pw'] = ':%(pw)s' % POSTGRES
+        if POSTGRES['port']:
+            POSTGRES['port'] = ':%(port)s' % POSTGRES
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s\
+        %(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
+        app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
