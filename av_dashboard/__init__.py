@@ -34,8 +34,7 @@ def configure_db_engine(app, test_config):
             POSTGRES['pw'] = ':%(pw)s' % POSTGRES
         if POSTGRES['port']:
             POSTGRES['port'] = ':%(port)s' % POSTGRES
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s\
-        %(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s%(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
     app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
 
 def create_app(test_config=None):
