@@ -36,7 +36,7 @@ def configure_db_engine(app, test_config):
             POSTGRES['port'] = ':%(port)s' % POSTGRES
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s\
         %(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
-    app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)    
+    app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -50,6 +50,8 @@ def create_app(test_config=None):
         app.secret_key = os.environ.get('session_key')
     if test_config is not None and 'jwt_key' in test_config:
         app.jwt_key = test_config['jwt_key']
+    if 'JWT_KEY' in app.config:
+        app.jwt_key = app.config['JWT_KEY']
 
     def generate_svg():
         app.db_connection = db_connection(app)
