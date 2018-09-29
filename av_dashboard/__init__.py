@@ -39,6 +39,10 @@ def configure_db_engine(app, test_config):
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    from jinja2_webpack import Environment as WebpackEnvironment
+    from jinja2_webpack.filter import WebpackFilter
+    webpack_env = WebpackEnvironment(publicRoot = '/static', manifest='./av_dashboard/static/webpack-manifest.json')
+    app.jinja_env.filters['webpack'] = WebpackFilter(webpack_env)
     if os.environ['FLASK_ENV'] != 'production':
         app.config.from_pyfile('config.py')
     app.config.from_pyfile(select_configuration_file())

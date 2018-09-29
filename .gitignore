@@ -12,3 +12,6 @@ instance/config.py
 config/__pycache__/*
 config/dev.py
 alembic.ini
+av_dashboard/static/*
+node_modules/*
+!av_dashboard/static/.gitkeep
