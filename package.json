@@ -1,0 +1,31 @@
+{
+  "name": "av_dashboard",
+  "version": "0.0.1",
+  "description": "av dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgileVentures/av-dashboard.git"
+  },
+  "author": "",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/AgileVentures/av-dashboard/issues"
+  },
+  "homepage": "https://github.com/AgileVentures/av-dashboard#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "npx": "^10.2.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-manifest-plugin": "^2.0.4"
+  }
+}

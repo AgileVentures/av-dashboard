@@ -5,3 +5,15 @@ av_dashboard_env/*
 tests/__pycache__/*
 __pycache__/*
 features/__pycache__/*
+alembic/__pycache__/*
+alembic/versions/__pycache__/*
+config/testing.py
+instance/config.py
+config/__pycache__/*
+config/dev.py
+alembic.ini
+av_dashboard/static/*
+node_modules/*
+!av_dashboard/static/.gitkeep
+av_dashboard/__init__.pyc
+av_dashboard/our_base/__pycache__/__init__.cpython-37.pyc

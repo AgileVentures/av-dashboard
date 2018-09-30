@@ -8,10 +8,44 @@ from nose.tools import assert_equals
 
 from av_dashboard import create_app
 
+import contextlib
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from av_dashboard import our_base, user, plan, subscription
+from sqlalchemy import MetaData
+from datetime import date
+
+meta = MetaData()
+
+def clear_db(app):
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI']  , convert_unicode=True)
+    meta = our_base.Base.metadata
+    with contextlib.closing(engine.connect()) as con:
+        trans = con.begin()
+        for table in reversed(meta.sorted_tables):
+            print("deleting")
+            con.execute(table.delete())
+        trans.commit()
+
+def basic_fixture(app):
+    some_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    Session = sessionmaker(bind=some_engine)
+    session = Session()
+    try:
+        usr = user.User()
+        pln = plan.Plan(amount=1000)
+        sub = subscription.Subscription(user=usr,sponsor=usr,plan=pln)
+        session.add(sub)
+        session.commit()
+        some_engine.dispose()
+    finally:
+        session.close()
 
 @before.each_example
 def before_all(*args):
     app = create_app({'session_key': 'secret_session', 'jwt_key': 'super_sauce'})
+    clear_db(app)
+    basic_fixture(app)
     app.config['TESTING'] = True
     world.app = app.test_client()
 
