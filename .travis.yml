@@ -1,6 +1,7 @@
 language: python
 python:
   - "3.6"
+node_js: "9.2.0"
 services:
   - postgresql
 
@@ -11,6 +12,8 @@ before_install:
 install:
   - pip3 install -r requirements.txt
   - pip3 install .
+  - yarn install
+  - npx webpack
   - cp instance/config.py.example instance/config.py
   - cp alembic.ini.example alembic.ini
   - alembic upgrade head --tag ci_db
