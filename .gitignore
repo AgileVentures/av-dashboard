@@ -12,3 +12,5 @@ instance/config.py
 config/__pycache__/*
 config/dev.py
 alembic.ini
+av_dashboard/__init__.pyc
+av_dashboard/our_base/__pycache__/__init__.cpython-37.pyc
