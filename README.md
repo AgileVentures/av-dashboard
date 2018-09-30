@@ -51,8 +51,8 @@ Insert the corresponding user, password and possibly host and port for your loca
 Next, copy the test.py.example and dev.py.example in the config folder as so:
 
 ```
-cp config/test.py.example config/test.py
-cp config/dev.py.example
+cp config/testing.py.example config/testing.py
+cp config/dev.py.example config/dev.py
 ```
 
 In most cases, you can just leave these files as they are, but in case you want a special name for your test or dev database, edit it appropriately.  But if you do
