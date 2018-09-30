@@ -15,3 +15,5 @@ alembic.ini
 av_dashboard/static/*
 node_modules/*
 !av_dashboard/static/.gitkeep
+av_dashboard/__init__.pyc
+av_dashboard/our_base/__pycache__/__init__.cpython-37.pyc
