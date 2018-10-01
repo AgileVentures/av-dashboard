@@ -37,12 +37,16 @@ def configure_db_engine(app, test_config):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s%(pw)s@%(host)s%(port)s/%(db)s' % POSTGRES
     app.db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'] , convert_unicode=True)
 
+def add_webpack_filter(app):
+    if os.environ['FLASK_ENV'] != 'production':
+        from jinja2_webpack import Environment as WebpackEnvironment
+        from jinja2_webpack.filter import WebpackFilter
+        webpack_env = WebpackEnvironment(publicRoot = '/static', manifest='./av_dashboard/static/webpack-manifest.json')
+        app.jinja_env.filters['webpack'] = WebpackFilter(webpack_env)
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    from jinja2_webpack import Environment as WebpackEnvironment
-    from jinja2_webpack.filter import WebpackFilter
-    webpack_env = WebpackEnvironment(publicRoot = '/static', manifest='./av_dashboard/static/webpack-manifest.json')
-    app.jinja_env.filters['webpack'] = WebpackFilter(webpack_env)
+    add_webpack_filter(app)
     if os.environ['FLASK_ENV'] != 'production':
         app.config.from_pyfile('config.py')
     app.config.from_pyfile(select_configuration_file())
@@ -95,7 +99,7 @@ def create_app(test_config=None):
         return decoded_token
 
     def render_index():
-        return render_template('index.html', graph = generate_svg())
+        return render_template('index.html', environment = os.environ['FLASK_ENV'], graph = generate_svg())
 
     def force_authentication():
         return app.config['ENV'] != "dev"
