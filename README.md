@@ -6,6 +6,8 @@ An internal dashboard for Agile Ventures analytics
 ```
 $ pip3 install -r requirements.txt
 $ pip3 install -e .
+$ yarn install
+$ npx webpack
 ```
 
 ## database setup
