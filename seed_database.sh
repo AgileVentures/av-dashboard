@@ -1,2 +1,2 @@
 #!/bin/sh
-FLASK_ENV=dev python seed_database.py
+FLASK_ENV=dev python3 seed_database.py
