@@ -1,4 +1,4 @@
-FROM node:10 as webpack-build
+FROM node:10 as webpack-builder
 
 RUN yarn global add npx
 
@@ -12,4 +12,14 @@ COPY . /av_dashboard
 RUN npx webpack
 
 
-RUN cat /av_dashboard/av_dashboard/static/main.js
+FROM python:3.6
+
+WORKDIR /av_dashboard
+
+COPY . /av_dashboard/
+RUN pip3 install -r requirements.txt
+COPY --from=webpack-builder /av_dashboard/av_dashboard/static/ /av_dashboard/av_dashboard/static/
+
+ENV FLASK_ENV=dev
+
+CMD ["flask",  "run"]
