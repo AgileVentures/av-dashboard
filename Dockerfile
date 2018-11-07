@@ -21,5 +21,6 @@ RUN pip3 install -r requirements.txt
 COPY --from=webpack-builder /av_dashboard/av_dashboard/static/ /av_dashboard/av_dashboard/static/
 
 ENV FLASK_ENV=dev
+EXPOSE 5000
 
-CMD ["flask",  "run"]
+CMD ["flask",  "run", "--host=0.0.0.0"]
