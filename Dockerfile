@@ -14,6 +14,8 @@ RUN npx webpack
 
 FROM python:3.6
 
+ARG FLASK_ENV=dev
+
 WORKDIR /av_dashboard
 
 COPY . /av_dashboard/
