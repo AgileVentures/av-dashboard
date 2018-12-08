@@ -22,6 +22,8 @@ def select_configuration_file():
         return str(pathlib.Path(".").absolute().joinpath(Path("config/ci.py")))
     if os.environ['FLASK_ENV'] == 'dev':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/dev.py")))
+    if os.environ['FLASK_ENV'] == 'docker_dev':
+        return str(pathlib.Path(".").absolute().joinpath(Path("config/docker_dev.py")))
     if os.environ['FLASK_ENV'] == 'production':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/production.py")))
 
