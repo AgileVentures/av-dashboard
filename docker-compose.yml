@@ -1,0 +1,25 @@
+version: '2.3'
+services:
+  dashboard_server:
+    build:
+      context: .
+    environment:
+      FLASK_ENV: docker_dev
+    depends_on:
+      db:
+        condition: service_healthy 
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: av_dashboard_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data
+    # https://stackoverflow.com/questions/41637505/how-to-persist-data-in-a-dockerized-postgres-database-using-volumes
