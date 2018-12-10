@@ -104,7 +104,7 @@ def create_app(test_config=None):
         return render_template('index.html', environment = os.environ['FLASK_ENV'], graph = generate_svg())
 
     def force_authentication():
-        return app.config['ENV'] != "dev"
+        return app.config['ENV'] not in ['dev', 'docker_dev']
 
     def login_required(f):
         @wraps(f)

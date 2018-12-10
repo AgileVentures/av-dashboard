@@ -1,13 +1,23 @@
 version: '2.3'
 services:
+  # add mogration step for datanase to entrypoint
   dashboard_server:
     build:
-      context: .
+      context: docker
+      dockerfile: Dockerfile.flask
     environment:
       FLASK_ENV: docker_dev
+      FLASK_APP: av_dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      - ".:/av_dashboard"
     depends_on:
       db:
-        condition: service_healthy 
+        condition: service_healthy
+  
+  # webpack-server:
+
 
   db:
     image: postgres
