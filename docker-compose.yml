@@ -1,7 +1,7 @@
 version: '2.3'
 services:
-  # add mogration step for datanase to entrypoint
-  dashboard_server:
+  # TODO add automatic database migration step when starting the application
+  av-dashboard:
     build:
       context: .
       dockerfile: docker/Dockerfile.flask
