@@ -26,6 +26,16 @@ Stop the application
 $ ./docker/stop.sh
 ```
 
+## Seed Database
+
+To add seed data to the database, run the commands below
+
+```bash
+$ ./docker/seed.sh
+$ ./docker/start.sh
+```
+The application should start with the database containing the seed data
+
 ## Tests inside docker container
 
 TODO
@@ -35,10 +45,6 @@ ps: those docker commands were tested under the following environment:
 - MacOS 10.13.6
     - Docker version 18.06.0-ce, build 0ffa825
     - docker-compose version 1.22.0, build f46880f
-
-- Linux Manjaro 17.1.12
-    - Docker version 18.06.1-ce, build e68fc7a215
-    - docker-compose version 1.22.0
 
 
 If it doesn't work for you, try to check your docker version and consider upgrading it if you have an older version.
