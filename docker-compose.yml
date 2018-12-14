@@ -1,6 +1,5 @@
 version: '2.3'
 services:
-  # TODO add automatic database migration step when starting the application
   av-dashboard:
     build:
       context: .
@@ -42,6 +41,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    # volumes:
-    #   - pgdata:/var/lib/postgresql/data
-    # https://stackoverflow.com/questions/41637505/how-to-persist-data-in-a-dockerized-postgres-database-using-volumes
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes: 
+     pgdata:
