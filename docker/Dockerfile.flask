@@ -4,7 +4,7 @@ WORKDIR /av_dashboard
 
 COPY . /av_dashboard/
 RUN pip3 install -r requirements.txt 
-RUN ["chmod", "+x", "docker/scripts/docker-entrypoint.sh"]
+RUN ["chmod", "+x", "docker/entrypoints/docker-entrypoint.sh"]
 
-ENTRYPOINT ["docker/scripts/docker-entrypoint.sh"]
+ENTRYPOINT ["docker/entrypoints/docker-entrypoint.sh"]
 CMD ["flask",  "run", "--host=0.0.0.0"]
