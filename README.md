@@ -1,3 +1,4 @@
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/AgileVentures/av-dashboard.svg?columns=all)](https://waffle.io/AgileVentures/av-dashboard)
 # av-dashboard    [![Build Status](https://travis-ci.org/AgileVentures/av-dashboard.svg?branch=master)](https://travis-ci.org/AgileVentures/av-dashboard)
 An internal dashboard for Agile Ventures analytics
 
