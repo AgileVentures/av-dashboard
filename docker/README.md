@@ -1,11 +1,12 @@
-# How to use docker to spin up WebSiteOne
+# How to use docker to spin up AV Dashboard
 
 ## Prerequisites
 
 In order to run this container you'll need docker installation
-* [Windows](https://docs.docker.com/docker-for-windows/)
 * [OS X](https://docs.docker.com/docker-for-mac/)
 * [Linux](https://docs.docker.com/linux/started/)
+
+Note: Docker for windows in currently unsupported at this time
 
 ## Setup the project
 Follow the instruction at [Project README.md](../README.md) to set up the configs for the project
