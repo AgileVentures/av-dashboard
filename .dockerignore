@@ -1,0 +1,5 @@
+node_modules/*
+**/__pycache__
+av_dashboard/static/*
+*.pyc
+.git

@@ -34,13 +34,15 @@ script_location = alembic
 # the output encoding used when revision files
 # are written from script.py.mako
 # output_encoding = utf-8
-databases = test_db, ci_db,dev_db
+databases = test_db, ci_db,dev_db,docker_dev_db
 [test_db]
 sqlalchemy.url = postgresql://postgres:pw@localhost:5432/av_dashboard_test
 [dev_db]
 sqlalchemy.url = postgresql://postgres:pw@localhost:5432/av_dashboard_dev
 [ci_db]
 sqlalchemy.url = postgresql://postgres@localhost/av_dashboard_test
+[docker_dev_db]
+sqlalchemy.url = postgresql://postgres@db/av_dashboard_dev
 
 # Logging configuration
 [loggers]

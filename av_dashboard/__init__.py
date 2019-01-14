@@ -22,6 +22,8 @@ def select_configuration_file():
         return str(pathlib.Path(".").absolute().joinpath(Path("config/ci.py")))
     if os.environ['FLASK_ENV'] == 'dev':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/dev.py")))
+    if os.environ['FLASK_ENV'] == 'docker_dev':
+        return str(pathlib.Path(".").absolute().joinpath(Path("config/docker_dev.py")))
     if os.environ['FLASK_ENV'] == 'production':
         return str(pathlib.Path(".").absolute().joinpath(Path("config/production.py")))
 
@@ -102,7 +104,7 @@ def create_app(test_config=None):
         return render_template('index.html', environment = os.environ['FLASK_ENV'], graph = generate_svg())
 
     def force_authentication():
-        return app.config['ENV'] != "dev"
+        return app.config['ENV'] not in ['dev', 'docker_dev']
 
     def login_required(f):
         @wraps(f)

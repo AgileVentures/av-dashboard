@@ -1,0 +1,47 @@
+version: '2.3'
+services:
+  av-dashboard:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.flask
+    environment:
+      FLASK_ENV: docker_dev
+      FLASK_APP: av_dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      - ".:/av_dashboard"
+    depends_on:
+      db:
+        condition: service_healthy
+      webpack-server:
+        condition: service_healthy
+  
+  webpack-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.webpack
+    healthcheck:
+      test: ["CMD-SHELL", "test -s av_dashboard/static/webpack-manifest.json"]
+      interval: 4s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - ".:/av_dashboard"
+
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: av_dashboard_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes: 
+     pgdata:
